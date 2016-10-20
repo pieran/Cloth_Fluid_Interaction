@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="include\Physics">
+      <UniqueIdentifier>{ac6d0ab1-55b0-4fc3-aa69-dfe156d32bd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Physics\Constraints">
+      <UniqueIdentifier>{6e2bc176-e49e-4787-a6ab-e90c1a3e4fa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Physics\CollisionShapes">
+      <UniqueIdentifier>{565b8c19-9d3a-4b0d-b389-90aa6b527c08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics">
+      <UniqueIdentifier>{1d641c09-8644-40d7-a637-e57166434d00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Objects">
+      <UniqueIdentifier>{d604d7d9-fa76-44ee-a029-8de6554e409a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="src\Physics">
+      <UniqueIdentifier>{41fd562a-f1c9-410f-8bd0-42ead3a30f32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Physics\Constraints">
+      <UniqueIdentifier>{f5ee26b8-b9a6-4d7e-8e98-9358df5c5b30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Physics\CollisionShapes">
+      <UniqueIdentifier>{39bf44f8-0ca5-45ad-a15b-56a39b267895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Graphics">
+      <UniqueIdentifier>{f9467d14-da26-4621-beb6-5e1bacf16993}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Objects">
+      <UniqueIdentifier>{6e1adfd7-ef55-4355-903b-3c632e0cffcb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ncltech\NCLDebug.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\Scene.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\CollisionDetection.cpp">
+      <Filter>src\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\CommonMeshes.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\Constraint.cpp">
+      <Filter>src\Physics\Constraints</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\CuboidCollisionShape.cpp">
+      <Filter>src\Physics\CollisionShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\Hull.cpp">
+      <Filter>src\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\Manifold.cpp">
+      <Filter>src\Physics\Constraints</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\Object.cpp">
+      <Filter>src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\ObjectMesh.cpp">
+      <Filter>src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\ObjectMeshDragable.cpp">
+      <Filter>src\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\PhysicsEngine.cpp">
+      <Filter>src\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\PhysicsObject.cpp">
+      <Filter>src\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\RenderList.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\SceneManager.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\SceneRenderer.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\ScreenPicker.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ncltech\SphereCollisionShape.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ncltech\NCLDebug.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\TSingleton.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\BoundingBox.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\CollisionDetection.h">
+      <Filter>include\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\CollisionShape.h">
+      <Filter>include\Physics\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\CommonMeshes.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\Constraint.h">
+      <Filter>include\Physics\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\CuboidCollisionShape.h">
+      <Filter>include\Physics\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\DistanceConstraint.h">
+      <Filter>include\Physics\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\Hull.h">
+      <Filter>include\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\Manifold.h">
+      <Filter>include\Physics\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\Object.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\ObjectMesh.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\ObjectMeshDragable.h">
+      <Filter>include\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\PhysicsEngine.h">
+      <Filter>include\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\PhysicsObject.h">
+      <Filter>include\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\RenderList.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\SceneManager.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\SceneRenderer.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\ScreenPicker.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\SphereCollisionShape.h">
+      <Filter>include\Physics\CollisionShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\Scene.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="PerfTimer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="REMOVEME_Broadphase.h">
+      <Filter>include\Physics</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{de2098b3-d2e4-472a-8363-6445bc5b2cd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{b7779e61-22b2-44f1-a060-cb735777b2f0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="nclgl\Camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\CubeRobot.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\Frustum.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\GameTimer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\Keyboard.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\Matrix3.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\Matrix4.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\MD5Anim.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\MD5FileData.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\MD5Mesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\MD5Node.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\Mesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\Mouse.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\OBJMesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\OGLRenderer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\Plane.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\Quaternion.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\SceneNode.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\Shader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="nclgl\Window.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="nclgl\Camera.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\common.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\CubeRobot.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Frustum.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\GameTimer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\InputDevice.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Keyboard.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Matrix3.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Matrix4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\MD5Anim.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\MD5FileData.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\MD5Mesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\MD5Node.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Mesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Mouse.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\OBJMesh.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\OGLRenderer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Plane.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Quaternion.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\SceneNode.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Shader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Vector2.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Vector3.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Vector4.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\Window.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="nclgl\ChildMeshInterface.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="include\Scenes">
+      <UniqueIdentifier>{c99a672d-6641-41d1-aef1-6a1dd201a7df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="src\Scenes">
+      <UniqueIdentifier>{f9f512ed-0ef6-4e00-930b-a68c1ad9a11b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ObjectPlayer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTechTutorial1.h">
+      <Filter>include\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTechTutorial2.h">
+      <Filter>include\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTechTutorial3.h">
+      <Filter>include\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="GameTechTutorial4.h">
+      <Filter>include\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsScene1.h">
+      <Filter>include\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsScene2.h">
+      <Filter>include\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsScene3.h">
+      <Filter>include\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsScene.h">
+      <Filter>include\Scenes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsScene.cpp">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

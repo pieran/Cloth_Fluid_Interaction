@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="nclgl\Camera.cpp" />
+    <ClCompile Include="nclgl\CubeRobot.cpp" />
+    <ClCompile Include="nclgl\Frustum.cpp" />
+    <ClCompile Include="nclgl\GameTimer.cpp" />
+    <ClCompile Include="nclgl\Keyboard.cpp" />
+    <ClCompile Include="nclgl\Matrix3.cpp" />
+    <ClCompile Include="nclgl\Matrix4.cpp" />
+    <ClCompile Include="nclgl\MD5Anim.cpp" />
+    <ClCompile Include="nclgl\MD5FileData.cpp" />
+    <ClCompile Include="nclgl\MD5Mesh.cpp" />
+    <ClCompile Include="nclgl\MD5Node.cpp" />
+    <ClCompile Include="nclgl\Mesh.cpp" />
+    <ClCompile Include="nclgl\Mouse.cpp" />
+    <ClCompile Include="nclgl\OBJMesh.cpp" />
+    <ClCompile Include="nclgl\OGLRenderer.cpp" />
+    <ClCompile Include="nclgl\Plane.cpp" />
+    <ClCompile Include="nclgl\Quaternion.cpp" />
+    <ClCompile Include="nclgl\SceneNode.cpp" />
+    <ClCompile Include="nclgl\Shader.cpp" />
+    <ClCompile Include="nclgl\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="nclgl\Camera.h" />
+    <ClInclude Include="nclgl\ChildMeshInterface.h" />
+    <ClInclude Include="nclgl\common.h" />
+    <ClInclude Include="nclgl\CubeRobot.h" />
+    <ClInclude Include="nclgl\Frustum.h" />
+    <ClInclude Include="nclgl\GameTimer.h" />
+    <ClInclude Include="nclgl\InputDevice.h" />
+    <ClInclude Include="nclgl\Keyboard.h" />
+    <ClInclude Include="nclgl\Matrix3.h" />
+    <ClInclude Include="nclgl\Matrix4.h" />
+    <ClInclude Include="nclgl\MD5Anim.h" />
+    <ClInclude Include="nclgl\MD5FileData.h" />
+    <ClInclude Include="nclgl\MD5Mesh.h" />
+    <ClInclude Include="nclgl\MD5Node.h" />
+    <ClInclude Include="nclgl\Mesh.h" />
+    <ClInclude Include="nclgl\Mouse.h" />
+    <ClInclude Include="nclgl\OBJMesh.h" />
+    <ClInclude Include="nclgl\OGLRenderer.h" />
+    <ClInclude Include="nclgl\Plane.h" />
+    <ClInclude Include="nclgl\Quaternion.h" />
+    <ClInclude Include="nclgl\SceneNode.h" />
+    <ClInclude Include="nclgl\Shader.h" />
+    <ClInclude Include="nclgl\Vector2.h" />
+    <ClInclude Include="nclgl\Vector3.h" />
+    <ClInclude Include="nclgl\Vector4.h" />
+    <ClInclude Include="nclgl\Window.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{98D6B51B-CB0A-4389-ADC6-24082B967C3F}</ProjectGuid>
+    <RootNamespace>Shared</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)\ExternalLibs\GLEW\include;$(SolutionDir)\ExternalLibs\SOIL;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\ExternalLibs\GLEW\lib\$(Configuration);$(SolutionDir)\ExternalLibs\SOIL\$(Configuration);$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)\ExternalLibs\GLEW\include;$(SolutionDir)\ExternalLibs\SOIL;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\ExternalLibs\GLEW\lib\$(Configuration);$(SolutionDir)\ExternalLibs\SOIL\$(Configuration);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

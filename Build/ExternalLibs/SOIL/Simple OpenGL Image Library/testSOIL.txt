@@ -1,0 +1,5 @@
+FILE QUARANTINED
+
+Microsoft Forefront Protection for Exchange Server removed a file since it was found to match a filter.
+File name: "winmail.dat->Game Tech 2014_MKII.zip->testSOIL.exe"
+Filter name: "FILE FILTER= PreventExecutables: *"

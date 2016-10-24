@@ -21,10 +21,7 @@
     <ClCompile Include="ClothScene1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="XPBD.cpp">
+    <ClCompile Include="CollidableObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,22 +29,8 @@
     <ClInclude Include="ClothScene1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utils.h">
+    <ClInclude Include="CollidableObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="XPBD.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CudaUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XPBD_Kernel.cuh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CudaCompile Include="XPBD_Kernel.cu">
-      <Filter>Source Files</Filter>
-    </CudaCompile>
   </ItemGroup>
 </Project>

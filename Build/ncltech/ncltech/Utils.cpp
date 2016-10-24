@@ -1,9 +1,9 @@
 #include "utils.h"
-#include <ncltech\ObjectMesh.h>
-#include <ncltech\ObjectMeshDragable.h>
-#include <ncltech\SphereCollisionShape.h>
-#include <ncltech\CuboidCollisionShape.h>
-#include <ncltech\CommonMeshes.h>
+#include "ObjectMesh.h"
+#include "ObjectMeshDragable.h"
+#include "SphereCollisionShape.h"
+#include "CuboidCollisionShape.h"
+#include "CommonMeshes.h"
 
 Vector4 Utils::GenColour(float scalar, float alpha)
 {

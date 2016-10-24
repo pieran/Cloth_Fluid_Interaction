@@ -32,7 +32,7 @@ public:
 	float y;
 	float z;
 
-	void			Normalise() {
+	Vector3& Normalise() {
 		float length = Length();
 
 		if(length != 0.0f)	{
@@ -41,6 +41,7 @@ public:
 			y = y * length;
 			z = z * length;
 		}
+		return *this;
 	}
 
 	void		ToZero() {
@@ -82,8 +83,16 @@ public:
 		return Vector3(x + a.x,y + a.y, z + a.z);
 	}
 
+	inline Vector3  operator+(const float  &a) const{
+		return Vector3(x + a, y + a, z + a);
+	}
+
 	inline Vector3  operator-(const Vector3  &a) const{
 		return Vector3(x - a.x,y - a.y, z - a.z);
+	}
+
+	inline Vector3  operator-(const float  &a) const{
+		return Vector3(x - a, y - a, z - a);
 	}
 
 	inline Vector3  operator-() const{

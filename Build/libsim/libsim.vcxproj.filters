@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Fluid">
+      <UniqueIdentifier>{5e515aab-18b2-4e38-867f-dd2bc1ea8d33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Cloth">
+      <UniqueIdentifier>{fb4a1c41-95c8-4482-8daf-d7ffdf8cb25e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Misc">
+      <UniqueIdentifier>{83d39fb9-c0e4-466b-87b3-34dc4f20cec4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Fluid">
+      <UniqueIdentifier>{e3608ef3-e4bc-4967-9454-002fe6b1210d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Cloth">
+      <UniqueIdentifier>{22d02eec-4fb6-4db2-ab0c-8e8e3c4020b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Misc">
+      <UniqueIdentifier>{c3bea361-0056-4a5f-b5aa-861d31789997}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="Cuda_Utils.cu">
+      <Filter>Source Files\Misc</Filter>
+    </CudaCompile>
+    <CudaCompile Include="Fluid_Kernel_Utils.cu">
+      <Filter>Source Files\Misc</Filter>
+    </CudaCompile>
+    <CudaCompile Include="PicFlip.cu">
+      <Filter>Source Files\Fluid</Filter>
+    </CudaCompile>
+    <CudaCompile Include="PicFlip_Kernel.cu">
+      <Filter>Source Files\Fluid</Filter>
+    </CudaCompile>
+    <CudaCompile Include="radixsort.cu">
+      <Filter>Source Files\Misc</Filter>
+    </CudaCompile>
+    <CudaCompile Include="XPBD_Kernel.cu">
+      <Filter>Source Files\Cloth</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Cuda_Utils.cuh">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="CudaUtils.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="float3.cuh">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Fluid_Kernel_Utils.cuh">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyValuePair.cuh">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="PicFlip.cuh">
+      <Filter>Header Files\Fluid</Filter>
+    </ClInclude>
+    <ClInclude Include="PicFlip_Kernel.cuh">
+      <Filter>Header Files\Fluid</Filter>
+    </ClInclude>
+    <ClInclude Include="PicFlip_Params.h">
+      <Filter>Header Files\Fluid</Filter>
+    </ClInclude>
+    <ClInclude Include="radixsort.cuh">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Real.h">
+      <Filter>Header Files\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="XPBD.h">
+      <Filter>Header Files\Cloth</Filter>
+    </ClInclude>
+    <ClInclude Include="XPBD_ConstraintLayer.h">
+      <Filter>Header Files\Cloth</Filter>
+    </ClInclude>
+    <ClInclude Include="XPBD_Kernel.cuh">
+      <Filter>Header Files\Cloth</Filter>
+    </ClInclude>
+    <ClInclude Include="XPBDConstraints.h">
+      <Filter>Header Files\Cloth</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="XPBD.cpp">
+      <Filter>Source Files\Cloth</Filter>
+    </ClCompile>
+    <ClCompile Include="XPBD_ConstraintLayer.cpp">
+      <Filter>Source Files\Cloth</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

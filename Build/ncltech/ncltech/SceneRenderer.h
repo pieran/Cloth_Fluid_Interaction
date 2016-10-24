@@ -77,6 +77,14 @@ Extra Features:
 #include "RenderList.h"
 #include "TSingleton.h"
 
+
+class PostProcessEffect
+{
+public:
+	virtual bool OnRender(GLuint depth, GLuint in_col, GLuint out_col) = 0; //returns true if in/out colour textures swapped
+};
+
+
 enum ScreenTextures //..or GBuffer
 {
 	SCREENTEX_DEPTH    = 0,			//Depth Buffer
@@ -90,7 +98,7 @@ enum ScreenTextures //..or GBuffer
 
 #define SHADOWMAP_MAX 16	//Hard limit defined in shader
 
-#define PROJ_FAR				80.0f			//Can see for 80m - setting this too far really hurts shadow quality as they attempt to cover the entirety of the view frustum
+#define PROJ_FAR				30.0f			//Can see for 80m - setting this too far really hurts shadow quality as they attempt to cover the entirety of the view frustum
 #define PROJ_NEAR				0.01f			//Nearest object @ 1cm
 #define PROJ_FOV				45.0f			//45 degree field of view
 
@@ -143,6 +151,13 @@ public:
 	inline void  SetSuperSamplingScalar(float scalar)			{ m_NumSuperSamples = scalar; }
 
 
+	inline const Matrix4& GetProjMatrix() { return projMatrix; }
+	inline const Matrix4& GetViewMatrix() { return viewMatrix; }
+	inline int GetRenderWidth() { return m_ScreenTexWidth; }
+	inline int GetRenderHeight() { return m_ScreenTexHeight; }
+
+	inline void AddPostProcessEffect(PostProcessEffect* effect) { m_PostProcessEffects.push_back(effect); }
+
 protected:
 	//Class-Only Functions
 	SceneRenderer();
@@ -161,6 +176,9 @@ protected:
 	void RenderShadowMaps();
 
 protected:
+	std::vector<PostProcessEffect*> m_PostProcessEffects;
+
+
 	//Current Scene
 	Scene*				m_Scene;
 	

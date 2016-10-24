@@ -50,6 +50,12 @@ SceneRenderer::SceneRenderer()
 
 SceneRenderer::~SceneRenderer()
 {
+	for (size_t i = 0; i < m_PostProcessEffects.size(); ++i)
+	{
+		delete m_PostProcessEffects[i];
+	}
+	m_PostProcessEffects.clear();
+
 	if (m_ShadowTex[0])
 	{
 		glDeleteTextures(m_ShadowMapNum, m_ShadowTex);
@@ -126,6 +132,12 @@ void SceneRenderer::InitializeDefaults()
 	NCLDebug::ClearLog();
 	ScreenPicker::Instance()->ClearAllObjects();
 
+	for (size_t i = 0; i < m_PostProcessEffects.size(); ++i)
+	{
+		delete m_PostProcessEffects[i];
+	}
+	m_PostProcessEffects.clear();
+
 	m_Camera->SetPosition(Vector3(-3.0f, 10.0f, 15.0f));
 	m_Camera->SetYaw(-10.f);
 	m_Camera->SetPitch(-30.f);
@@ -137,7 +149,7 @@ void SceneRenderer::InitializeDefaults()
 
 	SetShadowMapNum(4);
 	SetShadowMapSize(2048);
-	m_NumSuperSamples = 4.0f;
+	m_NumSuperSamples = 1.0f;
 	m_GammaCorrection = 1.0f / 2.2f;
 }
 
@@ -232,16 +244,32 @@ void SceneRenderer::RenderScene()
 
 		//Render Debug Data (NCLDebug)
 		PhysicsEngine::Instance()->DebugRender();
-		NCLDebug::SortDebugLists();
-		NCLDebug::DrawDebugLists();	
 	}
+
+
+	//Post Process Effects
+	int ping = SCREENTEX_COLOUR1;
+	int pong = SCREENTEX_COLOUR0;
+	for (size_t i = 0; i < m_PostProcessEffects.size(); ++i)
+	{
+		if (m_PostProcessEffects[i]->OnRender(
+			m_ScreenTex[SCREENTEX_DEPTH],
+			m_ScreenTex[ping],
+			m_ScreenTex[pong]))
+		{
+			std::swap(ping, pong);
+		}			
+	}
+
+	NCLDebug::SortDebugLists();
+	NCLDebug::DrawDebugLists();
 
 	//Downsample and present our complete image to the window
 	glDisable(GL_DEPTH_TEST);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, width, height);
 	SetCurrentShader(m_ShaderPresentToWindow);
-	glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, m_ScreenTex[SCREENTEX_COLOUR1]);
+	glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, m_ScreenTex[ping]);
 	glDrawArrays(GL_POINTS, 0, 1);
 
 	//Finally draw any non-anti aliasing HUD elements

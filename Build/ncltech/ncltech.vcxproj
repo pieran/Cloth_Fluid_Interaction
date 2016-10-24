@@ -90,6 +90,7 @@
     <ClCompile Include="ncltech\ScreenPicker.cpp" />
     <ClCompile Include="ncltech\ObjectMesh.cpp" />
     <ClCompile Include="ncltech\SphereCollisionShape.cpp" />
+    <ClCompile Include="ncltech\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ncltech\BoundingBox.h" />
@@ -114,6 +115,7 @@
     <ClInclude Include="ncltech\ScreenPicker.h" />
     <ClInclude Include="ncltech\SphereCollisionShape.h" />
     <ClInclude Include="ncltech\TSingleton.h" />
+    <ClInclude Include="ncltech\Utils.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="REMOVEME_Broadphase.h" />
   </ItemGroup>

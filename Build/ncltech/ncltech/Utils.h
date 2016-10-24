@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ncltech\Object.h>
+#include "Object.h"
 
 namespace Utils
 {

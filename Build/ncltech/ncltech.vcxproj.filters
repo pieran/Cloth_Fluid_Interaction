@@ -95,6 +95,9 @@
     <ClCompile Include="ncltech\SphereCollisionShape.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="ncltech\Utils.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ncltech\NCLDebug.h">
@@ -168,6 +171,9 @@
     </ClInclude>
     <ClInclude Include="REMOVEME_Broadphase.h">
       <Filter>include\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ncltech\Utils.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

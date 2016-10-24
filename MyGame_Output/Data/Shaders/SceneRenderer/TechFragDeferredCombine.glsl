@@ -22,7 +22,7 @@ void main(void)	{
 	
 //Lighting Combination
 	vec3 finalColour = colour * (ambientColour + vec3(light.x))
-						+ specColour * light.y * 0.6;
+						+ specColour * light.y * 0.3;
 
 //Output Final L Colours
 	OutFrag = vec4(finalColour, 1.0f);//finalColour, 1.0f);

@@ -3,7 +3,7 @@
 
 #include <nclgl\Mesh.h>
 #include <ncltech\Scene.h>
-#include "XPBD.h"
+#include <libsim/XPBD.h>
 
 class ClothScene1 : public Scene
 {
@@ -14,11 +14,13 @@ public:
 	virtual void OnInitializeScene()	 override;
 	virtual void OnCleanupScene()		 override;
 	virtual void OnUpdateScene(float dt) override;
-
 protected:
 	XPBD* m_Sim;
 
-	GLuint m_ClothTex;
+	std::vector<Object*> m_Spheres;
+
+	GLuint m_ClothTexFront;
+	GLuint m_ClothTexBack;
 
 	uint  m_ShadowCycleKey;
 	uint  m_SuperSampleCycleKey;

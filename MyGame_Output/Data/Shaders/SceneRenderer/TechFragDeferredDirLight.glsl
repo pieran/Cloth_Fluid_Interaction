@@ -48,7 +48,7 @@ void main(void)	{
 	
 	
 //Shadow Calculations
-	vec4 shadowWsPos = vec4(wsPos + normal * 0.2f, 1.0f);
+
 	
 	float shadow = 1.0f;
 	vec3 shadowCol = vec3(0.0f);
@@ -59,6 +59,8 @@ void main(void)	{
 		int i = shadowNum - 1;
 		for (; i >= 0; i--)
 		{
+			float factor = 0.005f * (shadowNum-i);
+			vec4 shadowWsPos = vec4(wsPos + normal * factor, 1.0f);
 			vec4 hcsShadow = shadowTransform[i] * shadowWsPos;
 			vec3 tsShadow = (hcsShadow.xyz / hcsShadow.w) * 0.5f + 0.5f;
 			

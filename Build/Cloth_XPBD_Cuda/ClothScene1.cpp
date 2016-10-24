@@ -5,9 +5,10 @@
 #include <ncltech\PhysicsEngine.h>
 #include <ncltech\DistanceConstraint.h>
 #include <ncltech\SceneManager.h>
+#include "CollidableObject.h"
+#include <ncltech\CommonMeshes.h>
 
-
-#include "Utils.h"
+#include <ncltech\Utils.h>
 using namespace Utils;
 
 ClothScene1::ClothScene1(const std::string& friendly_name)
@@ -15,19 +16,28 @@ ClothScene1::ClothScene1(const std::string& friendly_name)
 	, m_Sim(NULL)
 	, m_ShadowCycleKey(5)
 	, m_SuperSampleCycleKey(1)
-	, m_ClothTex(0)
+	, m_ClothTexFront(0)
+	, m_ClothTexBack(0)
 {
-	m_ClothTex = SOIL_load_OGL_texture(TEXTUREDIR"target.tga",
-		SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
-		SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
+	auto load_font = [&](const char* filename)
+	{
+		GLuint tex = SOIL_load_OGL_texture(filename,
+			SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID,
+			SOIL_FLAG_MIPMAPS | SOIL_FLAG_INVERT_Y | SOIL_FLAG_NTSC_SAFE_RGB | SOIL_FLAG_COMPRESS_TO_DXT);
 
-	glBindTexture(GL_TEXTURE_2D, m_ClothTex);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D, tex);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		return tex;
+	};
+
+	m_ClothTexBack = load_font(TEXTUREDIR"cloth_seamless_blue.png");
+	m_ClothTexFront = load_font(TEXTUREDIR"cloth_seamless_yellow.png");
+
 }
 
 ClothScene1::~ClothScene1()
@@ -38,10 +48,16 @@ ClothScene1::~ClothScene1()
 		m_Sim = NULL;
 	}
 
-	if (m_ClothTex)
+	if (m_ClothTexFront)
 	{
-		glDeleteTextures(1, &m_ClothTex);
-		m_ClothTex = NULL;
+		glDeleteTextures(1, &m_ClothTexFront);
+		m_ClothTexFront = NULL;
+	}
+
+	if (m_ClothTexBack)
+	{
+		glDeleteTextures(1, &m_ClothTexBack);
+		m_ClothTexBack = NULL;
 	}
 }
 
@@ -53,62 +69,55 @@ void ClothScene1::OnInitializeScene()
 	m_ShadowCycleKey = 5;
 	m_SuperSampleCycleKey = 1;
 
-	SceneManager::Instance()->GetCamera()->SetPosition(Vector3(15.0f, 10.0f, -15.0f));
-	SceneManager::Instance()->GetCamera()->SetYaw(140.f);
+	SceneManager::Instance()->GetCamera()->SetPosition(Vector3(2.5f, 7.0f, -2.5f));
+	SceneManager::Instance()->GetCamera()->SetYaw(145.f);
 	SceneManager::Instance()->GetCamera()->SetPitch(-20.f);
+	SceneManager::Instance()->SetSpecularIntensity(16.0f);
+	
+	SceneManager::Instance()->SetShadowMapNum(8);
+	SceneManager::Instance()->SetShadowMapSize(2048);
 
+	this->SetWorldRadius(5.f);
 
 	//Create Ground
 	this->AddGameObject(BuildCuboidObject("Ground", Vector3(0.0f, -1.0f, 0.0f), Vector3(20.0f, 1.0f, 20.0f), 0.0f, true, false, Vector4(0.2f, 0.5f, 1.0f, 1.0f)));
 
-	auto create_cube_tower = [&](const Vector3& offset, float cubewidth)
-	{
-		for (int x = 0; x < 2; ++x)
-		{
-			for (int y = 0; y < 5; ++y)
-			{
-				uint idx = x * 5 + y;
-				Vector4 colour = GenColour(idx / 10.f, 0.5f);
-				Object* cube = BuildCuboidObject("", offset + Vector3(x * cubewidth, y * cubewidth, cubewidth * (idx % 2 == 0) ? 0.5f : -0.5f), Vector3(cubewidth, cubewidth, cubewidth) * 0.5f, 0.f, false, true, colour);
-				this->AddGameObject(cube);
-			}
-		}
-	};
-
-	auto create_ball_cube = [&](const Vector3& offset, const Vector3& scale, float ballsize)
-	{
-		for (int x = 0; x < 5; ++x)
-		{
-			for (int y = 0; y < 5; ++y)
-			{
-				for (int z = 0; z < 5; ++z)
-				{
-					Object* sphere = BuildSphereObject("", offset + Vector3(scale.x *x, scale.y * y, scale.z * z), ballsize, 0.f, false, false, Vector4(1.0f, 0.5f, 0.2f, 1.0f));
-					this->AddGameObject(sphere);
-				}
-			}
-		}
-	};
-
-	//Create Cube Towers
-	create_cube_tower(Vector3(3.0f, 0.5f, 3.0f), 1.0f);
-	create_cube_tower(Vector3(-3.0f, 0.5f, -3.0f), 1.0f);
-
-	//Create Test Ball Pit
-	create_ball_cube(Vector3(-8.0f, 0.5f, 12.0f), Vector3(0.5f, 0.5f, 0.5f), 0.1f);
-	create_ball_cube(Vector3(8.0f, 0.5f, 12.0f), Vector3(0.3f, 0.3f, 0.3f), 0.1f);
-	create_ball_cube(Vector3(-8.0f, 0.5f, -12.0f), Vector3(0.2f, 0.2f, 0.2f), 0.1f);
-	create_ball_cube(Vector3(8.0f, 0.5f, -12.0f), Vector3(0.5f, 0.5f, 0.5f), 0.1f);
-
-
-	Matrix4 transform = Matrix4::Translation(Vector3(0.0f, 5.0f, 0.0f)) * Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f));
+	Matrix4 transform = Matrix4::Translation(Vector3(0.0f, 1.2f, 0.0f)) * Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f));
 	m_Sim = new XPBD();
-	m_Sim->InitializeCloth(24, 24, transform);
-	m_Sim->SetTexture(m_ClothTex, false);
+	m_Sim->InitializeCloth(129, 129, transform);
+	m_Sim->SetTextureFront(m_ClothTexFront, false);
+	m_Sim->SetTextureBack(m_ClothTexBack, false);
 	m_Sim->SetLocalTransform(Matrix4());
 	m_Sim->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	m_Sim->SetBoundingRadius(10000.0f);
 	this->AddGameObject(m_Sim);
+
+
+	auto add_sphere = [&](const Vector3& pos, float radius)
+	{
+		//Object* sphere = BuildSphereObject("ColSphere", pos, radius - 0.003f, 0.0f, false, true, );
+
+		XPBDSphereConstraint sc;
+		memcpy(&sc.centre, &pos, sizeof(float3));
+		sc.radius = radius;
+		m_Sim->m_SphereConstraints.push_back(sc);
+
+		CollidableObject* sphere = new CollidableObject("ColSphere", &m_Sim->m_SphereConstraints[m_Sim->m_SphereConstraints.size()-1]);
+
+		sphere->SetMesh(CommonMeshes::Sphere(), false);
+		sphere->SetTexture(CommonMeshes::CheckerboardTex(), false);
+		sphere->SetLocalTransform(Matrix4::Scale(Vector3(radius * 0.99, radius * 0.99, radius * 0.99)));
+		sphere->SetColour(Vector4(1.0f, 0.8f, 0.8f, 1.0f));
+		sphere->SetBoundingRadius(radius * 0.99);
+		sphere->SetLocalTransform(Matrix4::Translation(pos) * sphere->GetLocalTransform());
+
+		m_Spheres.push_back(sphere);
+		this->AddGameObject(sphere);
+	};
+
+	add_sphere(Vector3(0.0f, 0.6f, 0.15f), 0.15f);
+
+	m_Sim->UpdateGLBuffers();
 }
 
 void ClothScene1::OnCleanupScene()
@@ -118,6 +127,19 @@ void ClothScene1::OnCleanupScene()
 
 void ClothScene1::OnUpdateScene(float dt)
 {
+	/*for (size_t i = 0; i < m_Spheres.size(); ++i)
+	{
+		memcpy(&m_Sim->m_SphereConstraints[i].centre, &m_Spheres[i]->GetWorldTransform().GetPositionVector(), sizeof(float3));
+	}*/
+
+	Scene::OnUpdateScene(dt);
+
+	if (Window::GetKeyboard()->KeyDown(KEYBOARD_G))
+	{
+		m_Sim->Update(1.0f / 60.0f);
+		m_Sim->UpdateGLBuffers();
+	}
+
 	float gamma = SceneManager::Instance()->GetGammaCorrection();
 
 	const Vector4 status_colour = Vector4(1.0f, 0.9f, 0.8f, 1.0f);
@@ -134,7 +156,7 @@ void ClothScene1::OnUpdateScene(float dt)
 	uint newShadowKey = m_ShadowCycleKey;
 	uint newSuperSampleKey = m_SuperSampleCycleKey;
 
-	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_G))
+	/*if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_G))
 		newShadowKey = ((newShadowKey + 1) % 9);
 
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_H))
@@ -151,7 +173,7 @@ void ClothScene1::OnUpdateScene(float dt)
 	if (Window::GetKeyboard()->KeyDown(KEYBOARD_5))
 		gamma -= dt * 0.2f;
 	if (Window::GetKeyboard()->KeyDown(KEYBOARD_6))
-		gamma += dt * 0.2f;
+		gamma += dt * 0.2f;*/
 
 	gamma = min(max(gamma, 0.0f), 5.0f);
 	SceneManager::Instance()->SetGammaCorrection(gamma);

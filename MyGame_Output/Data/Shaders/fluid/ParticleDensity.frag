@@ -58,5 +58,5 @@ void main(void)	{
 	//vec3 color = hsv2rgb(vec3(IN.pressure * 20.0f + 0.5f, 1.0f, 1.0f));
 		
 	float diffuse = max(0.3, dot(normal, -lightDir))* occlusion;
-	gl_FragColor = vec4(color * diffuse, 1.0f);
+	gl_FragColor = vec4(color * diffuse, 0.5f);
 }

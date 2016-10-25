@@ -5,7 +5,7 @@
 #include <libsim\radixsort.cuh>
 
 #define COUPLER_FORCE_SYNC_AFTER_EACH_KERNEL FALSE
-#define COUPLER_PROFILE_EACH_KERNEL TRUE
+#define COUPLER_PROFILE_EACH_KERNEL FALSE
 
 #if COUPLER_PROFILE_EACH_KERNEL
 cudaEvent_t pfprofile_start = NULL, pfprofile_stop = NULL;

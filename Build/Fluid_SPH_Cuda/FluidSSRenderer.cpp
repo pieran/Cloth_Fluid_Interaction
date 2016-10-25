@@ -734,7 +734,7 @@ void FluidSSRenderer::RenderAsFluid(GLuint depth, GLuint in_col, GLuint out_col)
 bool ambient_occlusion = false;
 void FluidSSRenderer::RenderAsBalls(GLuint depth, GLuint in_col, GLuint out_col)
 {
-	const float AO_Factor = 4.0f; //x times the radius of the particles
+	const float AO_Factor = 2.0f; //x times the radius of the particles
 	if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_O))
 		ambient_occlusion = !ambient_occlusion;
 

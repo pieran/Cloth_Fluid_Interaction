@@ -94,7 +94,7 @@ void FluidClothScene1::OnInitializeScene()
 
 
 
-	m_Timestep = 1.0f / 360.0f;
+	m_Timestep = 1.0f / 60.0f;
 
 	//Create Fluid
 	fluid = new FluidPicFlip();
@@ -105,12 +105,12 @@ void FluidClothScene1::OnInitializeScene()
 	std::vector<float> boundary_particles;
 
 	//Set Boundary Size
-	Vector3 bmin = Vector3(-5.0f, 0.0f, -5.0f);
-	Vector3 bmax = Vector3(5.0f, 10.0f, 5.0f);
+	Vector3 bmin = Vector3(-5.0f, 0.0f, -1.0f);
+	Vector3 bmax = Vector3(5.0f, 2.5f, 1.0f);
 	Vector3 bbsize = bmax - bmin;
 	AddBoundaryMarkers(boundary_particles, bmin, bmax);
 
-	float density = 128.f; //Particles Per Cell
+	float density = 27.; //Particles Per Cell
 	fluid->m_Params.particles_per_cell = density;
 
 	float grid_y = round(fluid->m_Params.grid_resolution.x * (bbsize.y / bbsize.x));
@@ -121,8 +121,8 @@ void FluidClothScene1::OnInitializeScene()
 	//Create Fluid
 	GenerateFluidCube_Random(
 		particles,
-		Vector3(-1.0f, 3.0f, -1.0f),
-		Vector3(1.0f, 4.5f, 1.0f),
+		Vector3(-5.0f, 0.0f, -1.0f),
+		Vector3(-3.0f, 3.0f, 1.0f),
 		density,
 		wrld2Grid);
 
@@ -155,7 +155,8 @@ void FluidClothScene1::OnInitializeScene()
 
 
 
-	Matrix4 transform = Matrix4::Translation(Vector3(0.0f, 2.6f, 0.0f)) * Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f)) * Matrix4::Scale(Vector3(4.0f, 4.0f, 4.0f));
+	Matrix4 transform = Matrix4::Translation(Vector3(0.0f, 1.0f, 0.0f)) * Matrix4::Rotation(90.0f, Vector3(0.0f, 1.0f, 0.0f)) * Matrix4::Scale(Vector3(2.0f, 2.0f, 2.0f));
+	//Matrix4 transform = Matrix4::Translation(Vector3(0.0f, 1.2f, 0.0f)) * Matrix4::Rotation(90.0f, Vector3(1.0f, 0.0f, 0.0f));
 	m_Sim = new XPBD();
 	m_Sim->InitializeCloth(65, 65, transform);
 	m_Sim->SetTextureFront(m_ClothTexFront, false);
@@ -170,7 +171,7 @@ void FluidClothScene1::OnInitializeScene()
 
 	coupler = new FluidClothCoupler(m_Sim, fluid);
 	coupler->m_Params.particle_size = particle_size * 5.0f;
-	coupler->m_Params.particle_iweight = 1.0f / 0.000001f;
+	coupler->m_Params.particle_iweight = 1.0f / 0.00001f;
 }
 
 void FluidClothScene1::OnCleanupScene()
@@ -184,14 +185,17 @@ void FluidClothScene1::OnUpdateScene(float dt)
 
 	if (Window::GetKeyboard()->KeyDown(KEYBOARD_G))
 	{
-		for (int i = 0; i < 6; ++i)
+		//for (int i = 0; i < 6; ++i)
 		{
 			fluid->update();
 
-			m_Sim->Update(m_Timestep);
-			m_Sim->GenerateNormals(false);
+			
+			//m_Sim->GenerateNormals(false);
 			coupler->HandleCollisions(m_Timestep);
+			
+			fluid->enforceBoundaries();
 
+			m_Sim->Update(m_Timestep);
 			fluid->copy_arrays_to_ogl_vbos();
 			m_Sim->UpdateGLBuffers();
 		}
@@ -203,7 +207,7 @@ void FluidClothScene1::OnUpdateScene(float dt)
 void FluidClothScene1::GenerateFluidCube_Random(std::vector<float>& particles, const Vector3& min, const Vector3& max, float density, const Vector3& grid_dim)
 {
 	Vector3 span = (max - min) * grid_dim;
-	size_t num = span.x * span.y * span.z * density;
+	size_t num =  span.x * span.y * span.z * density;
 
 
 	std::uniform_real_distribution<float> d_x(min.x, max.x);

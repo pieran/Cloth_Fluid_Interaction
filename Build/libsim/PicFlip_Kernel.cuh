@@ -71,6 +71,7 @@ namespace picflip
 
 	void subtractProgram(cudaStream_t stream,
 		uint3 grid_resolution,
+		cudaTextureObject_t in_markergrid,
 		cudaTextureObject_t in_velgrid,
 		cudaTextureObject_t in_presgrid,
 		cudaSurfaceObject_t out_velgrid);
@@ -79,4 +80,13 @@ namespace picflip
 		cudaTextureObject_t in_velgrid, cudaTextureObject_t in_veloriggrid);
 
 	void advectProgram(cudaStream_t stream, uint particle_count, float3* positions, float3* velocities, float3* out_positions, cudaTextureObject_t in_velgrid);
+
+	void enforceBoundaries(cudaStream_t stream, uint particle_count, float3* positions);
+
+	void initPressureGrid(cudaStream_t stream, uint3 grid_resolution, cudaSurfaceObject_t presgrid, cudaSurfaceObject_t presgrid_old);
+	
+	void marksolidcells(cudaStream_t stream,
+		uint3 grid_start,
+		uint3 grid_size,
+		cudaTextureObject_t markergrid);
 }

@@ -694,7 +694,7 @@ cudaSurfaceObject_t out_divgrid)
 	char marker = readTexNearest<char>(in_markergrid, cell_pos.x, cell_pos.y, cell_pos.z);
 
 	//Only compute divergence for fluid
-	if (marker == 1)
+	if (marker & 1)
 	{
 		float3 idx = make_float3(cell_pos.x, cell_pos.y, cell_pos.z);
 
@@ -707,7 +707,7 @@ cudaSurfaceObject_t out_divgrid)
 		out_div = ((vel_max.x - vel_min.x) + (vel_max.y - vel_min.y) + (vel_max.z - vel_min.z));
 
 		//float density = readTexNearest<float4>(in_weightgrid, index_x, index_y, index_z).w;
-		out_div -= max((vel_min.w - dParams.particles_per_cell), 0.0); //volume conservation
+		out_div -= max((vel_min.w - dParams.particles_per_cell), 0.0f); //volume conservation
 
 		//out_div *= 2.0f;
 	}
@@ -744,7 +744,126 @@ void picflip::divergenceProgram(cudaStream_t stream,
 #endif
 }
 
+__global__
+void kernel_marksolidcells(
+	uint3 grid_start,
+	uint3 grid_size,
+	cudaTextureObject_t markergrid)
+{
+	int idx = blockIdx.y*blockDim.y + threadIdx.y;
+	int3 cell_pos = make_int3(
+				blockIdx.x*blockDim.x + threadIdx.x,
+				idx % grid_size.y,
+				idx / grid_size.y
+				);
 
+	if (cell_pos.x >= grid_size.x
+		|| cell_pos.y >= grid_size.y
+		|| cell_pos.z >= grid_size.z)
+	{
+		return;
+	}
+		
+	cell_pos.x += grid_start.x;
+	cell_pos.y += grid_start.y;
+	cell_pos.z += grid_start.z;
+
+	unsigned char marker = readTexNearest<unsigned int>(markergrid, cell_pos.x, cell_pos.y, cell_pos.z);
+	marker |= 2;
+	writeTex<unsigned char>(markergrid, marker, cell_pos.x, cell_pos.y, cell_pos.z);
+}
+
+void picflip::marksolidcells(cudaStream_t stream,
+	uint3 grid_start,
+	uint3 grid_size,
+	cudaTextureObject_t markergrid)
+{
+	dim3 num_threads;
+	dim3 num_blocks;
+
+	utils::compute_grid_size(grid_size.x, CUDA_BLOCK_SIZE_3D, num_blocks.x, num_threads.x);
+	utils::compute_grid_size((grid_size.y) * (grid_size.z), CUDA_BLOCK_SIZE_2D, num_blocks.y, num_threads.y);
+	num_threads.z = 1; num_blocks.z = 1;
+
+
+	//Create Cell Indexes
+	PICFLIP_PROFILE_BEGIN_KERNEL
+		kernel_marksolidcells << <num_blocks, num_threads, 0, stream >> >(grid_start, grid_size, markergrid);
+	PICFLIP_PROFILE_END_KERNEL("kernel_marksolidcells", grid_size.x * grid_size.y * grid_size.z)
+
+#if PICFLIP_FORCE_SYNC_AFTER_EACH_KERNEL
+		gpuErrchk(cudaPeekAtLastError());
+	gpuErrchk(cudaDeviceSynchronize());
+#endif
+}
+
+
+
+
+__global__
+void kernel_initPressureGrid(
+	cudaSurfaceObject_t presgrid,
+	cudaSurfaceObject_t presgrid_old)
+{
+	int3 cell_pos;
+	if (!GetCellPos(cell_pos))
+		return;
+
+	float op = 0.0;
+	
+	//if (cell_pos.x >= 55 && cell_pos.x < 60)
+	//{
+	//	op = 32.0f;
+	//}
+
+	surf3Dwrite(op, presgrid, cell_pos.x * sizeof(float), cell_pos.y, cell_pos.z);
+	surf3Dwrite(op, presgrid_old, cell_pos.x * sizeof(float), cell_pos.y, cell_pos.z);
+}
+
+void picflip::initPressureGrid(cudaStream_t stream, uint3 grid_resolution, cudaSurfaceObject_t presgrid, cudaSurfaceObject_t presgrid_old)
+{
+	dim3 num_threads;
+	dim3 num_blocks;
+#if XFER_USE_TRPLE_CUDA_DIM
+	utils::compute_grid_size(grid_resolution.x, CUDA_BLOCK_SIZE_3D, num_blocks.x, num_threads.x);
+	utils::compute_grid_size(grid_resolution.y, CUDA_BLOCK_SIZE_3D, num_blocks.y, num_threads.y);
+	utils::compute_grid_size(grid_resolution.z, CUDA_BLOCK_SIZE_3D, num_blocks.z, num_threads.z);
+#else
+	utils::compute_grid_size(grid_resolution.x, CUDA_BLOCK_SIZE_3D, num_blocks.x, num_threads.x);
+	utils::compute_grid_size((grid_resolution.y) * (grid_resolution.z), CUDA_BLOCK_SIZE_2D, num_blocks.y, num_threads.y);
+	num_threads.z = 1; num_blocks.z = 1;
+#endif
+
+	//Create Cell Indexes
+	PICFLIP_PROFILE_BEGIN_KERNEL
+		kernel_initPressureGrid << <num_blocks, num_threads, 0, stream >> >(presgrid, presgrid_old);
+	PICFLIP_PROFILE_END_KERNEL("kernel_divergenceProgram", grid_resolution.x * grid_resolution.y * grid_resolution.z)
+
+#if PICFLIP_FORCE_SYNC_AFTER_EACH_KERNEL
+		gpuErrchk(cudaPeekAtLastError());
+	gpuErrchk(cudaDeviceSynchronize());
+#endif
+}
+
+
+__device__
+float GetAdjPressure(const float& mypres, cudaTextureObject_t in_markergrid, cudaTextureObject_t in_presgrid, const int& cx, const int& cy, const int& cz)
+{
+#if 1
+	return readTexNearest<float>(in_presgrid, cx, cy, cz);
+#else
+	unsigned char marker = readTexNearest<unsigned char>(in_markergrid, cx, cy, cz);
+	float pres = readTexNearest<float>(in_presgrid, cx, cy, cz);
+
+	if (marker & 2)
+	{
+		pres = mypres;
+		//printf("moo");
+	}
+
+	return pres;
+#endif
+}
 
 
 __global__
@@ -759,7 +878,7 @@ cudaSurfaceObject_t out_presgrid)
 		return;
 
 	char marker = readTexNearest<char>(in_markergrid, cell_pos.x, cell_pos.y, cell_pos.z);
-	if (marker == 0)
+	if (marker & 1 == 0)
 		return;
 
 	//Only compute pressure for fluid cells
@@ -768,12 +887,14 @@ cudaSurfaceObject_t out_presgrid)
 	{
 		float divergenceCenter = readTexNearest<float>(in_divgrid, cell_pos.x, cell_pos.y, cell_pos.z);
 
-		float left = readTexNearest<float>(in_presgrid, cell_pos.x - 1, cell_pos.y, cell_pos.z);
-		float right = readTexNearest<float>(in_presgrid, cell_pos.x + 1, cell_pos.y, cell_pos.z);
-		float bottom = readTexNearest<float>(in_presgrid, cell_pos.x, cell_pos.y - 1, cell_pos.z);
-		float top = readTexNearest<float>(in_presgrid, cell_pos.x, cell_pos.y + 1, cell_pos.z);
-		float back = readTexNearest<float>(in_presgrid, cell_pos.x, cell_pos.y, cell_pos.z - 1);
-		float front = readTexNearest<float>(in_presgrid, cell_pos.x, cell_pos.y, cell_pos.z + 1);
+		float mypres = readTexNearest<float>(in_presgrid, cell_pos.x, cell_pos.y, cell_pos.z);
+
+		float left = GetAdjPressure(mypres, in_markergrid, in_presgrid, cell_pos.x - 1, cell_pos.y, cell_pos.z);
+		float right = GetAdjPressure(mypres, in_markergrid, in_presgrid, cell_pos.x + 1, cell_pos.y, cell_pos.z);
+		float bottom = GetAdjPressure(mypres, in_markergrid, in_presgrid, cell_pos.x, cell_pos.y - 1, cell_pos.z);
+		float top = GetAdjPressure(mypres, in_markergrid, in_presgrid, cell_pos.x, cell_pos.y + 1, cell_pos.z);
+		float back = GetAdjPressure(mypres, in_markergrid, in_presgrid, cell_pos.x, cell_pos.y, cell_pos.z - 1);
+		float front = GetAdjPressure(mypres, in_markergrid, in_presgrid, cell_pos.x, cell_pos.y, cell_pos.z + 1);
 
 		out_pressure = (left + right + bottom + top + back + front - divergenceCenter) / 6.0;
 	}
@@ -824,8 +945,100 @@ void picflip::jacobiProgram(cudaStream_t stream,
 }
 
 
+
+__device__
+bool readInterpolated(float& out_float, cudaTextureObject_t markergrid, cudaTextureObject_t pressuregrid, float xs1, float ys1, float zs1, float xs2, float ys2, float zs2, float factor)
+{
+	unsigned char  uftl = tex3D<unsigned char >(markergrid, xs1 + 0.5f, ys1 + 0.5f, zs1 + 0.5f);
+	unsigned char  uftr = tex3D<unsigned char >(markergrid, xs2 + 0.5f, ys2 + 0.5f, zs2 + 0.5f);
+
+	float ftl = tex3D<float>(pressuregrid, xs1 + 0.5f, ys1 + 0.5f, zs1 + 0.5f);
+	float ftr = tex3D<float>(pressuregrid, xs2 + 0.5f, ys2 + 0.5f, zs2 + 0.5f);
+
+	if (uftl & uftr & 2)
+	{
+		out_float = 0.0f;
+		return false;
+	}		
+	else if (uftl & 2)
+		ftl = ftr;
+	else if (uftr & 2)
+	{
+		ftr = ftl;
+	}
+
+	out_float = ftl * (1.0f - factor) + ftr * factor;
+	return true;
+}
+
+__device__
+float readInterpolatedPressures(cudaTextureObject_t markergrid, cudaTextureObject_t pressuregrid, float xs, float ys, float zs)
+{
+	float x = floor(xs);
+	float y = floor(ys);
+	float z = floor(zs);
+
+	float fx = xs - x;
+	float fy = ys - y;
+	float fz = zs - z;
+
+	float ftl, fbl, btl, bbl;
+
+	bool bftl = readInterpolated(ftl, markergrid, pressuregrid,
+		x , y, z,
+		x + 1.0f, y, z, fx);
+
+	bool bfbl = readInterpolated(fbl, markergrid, pressuregrid,
+		x , y + 1.0f, z ,
+		x + 1.0f, y + 1.0f, z , fx);
+
+	bool bbtl = readInterpolated(btl, markergrid, pressuregrid,
+		x , y, z + 1.0f,
+		x + 1.0f, y, z  + 1.0f, fx);
+
+	bool bbbl = readInterpolated(bbl, markergrid, pressuregrid,
+		x, y + 1.0f, z + 1.0f,
+		x + 1.0f, y + 1.0f, z + 1.0f, fx);
+
+	bool by1 = true, by2 = true;
+
+	if (!bftl && !bfbl)
+		by1 = false;
+	else if (!bftl)
+		ftl = fbl;
+	else if (!bfbl)
+	{
+		fbl = ftl;
+	}
+
+	if (!bbtl && !bbbl)
+		by2 = false;
+	else if (!bbtl)
+		btl = bbl;
+	else if (!bbbl)
+	{
+		bbl = btl;
+	}
+
+	ftl = ftl * (1.0f - fy) + fbl * fy;
+	btl = btl * (1.0f - fy) + bbl * fy;
+
+
+	if (!by1 && !by2)
+		return 0.0f;
+	else if (!by1)
+		ftl = btl;
+	else if (!by2)
+	{
+		btl = ftl;
+	}
+
+	return ftl * (1.0f - fz) + btl * fz;
+}
+
 __global__
 void kernel_subtractProgram(
+cudaTextureObject_t in_markergrid,
 cudaTextureObject_t in_velgrid,
 cudaTextureObject_t in_presgrid,
 cudaSurfaceObject_t out_velgrid)
@@ -836,13 +1049,23 @@ cudaSurfaceObject_t out_velgrid)
 
 	float3 idx = make_float3(cell_pos.x, cell_pos.y, cell_pos.z);
 
+#if 1
 	float pres_max = readTexInterpolate<float>(in_presgrid, idx.x, idx.y, idx.z);
 
 	float3 pres_min;
 	pres_min.x = readTexInterpolate<float>(in_presgrid, idx.x - 1, idx.y, idx.z);
 	pres_min.y = readTexInterpolate<float>(in_presgrid, idx.x, idx.y - 1, idx.z);
 	pres_min.z = readTexInterpolate<float>(in_presgrid, idx.x, idx.y, idx.z - 1);
+#else
 
+	float pres_max = readInterpolatedPressures(in_markergrid, in_presgrid, idx.x, idx.y, idx.z);
+
+	float3 pres_min;
+	pres_min.x = readInterpolatedPressures(in_markergrid, in_presgrid, idx.x - 1, idx.y, idx.z);
+	pres_min.y = readInterpolatedPressures(in_markergrid, in_presgrid, idx.x, idx.y - 1, idx.z);
+	pres_min.z = readInterpolatedPressures(in_markergrid, in_presgrid, idx.x, idx.y, idx.z - 1);
+
+#endif
 	//compute gradient of pressure
 	float4 gradient;
 	gradient.x = (pres_max - pres_min.x);
@@ -859,6 +1082,7 @@ cudaSurfaceObject_t out_velgrid)
 
 void picflip::subtractProgram(cudaStream_t stream,
 	uint3 grid_resolution,
+	cudaTextureObject_t in_markergrid,
 	cudaTextureObject_t in_velgrid,
 	cudaTextureObject_t in_presgrid,
 	cudaSurfaceObject_t out_velgrid)
@@ -877,6 +1101,7 @@ void picflip::subtractProgram(cudaStream_t stream,
 
 	PICFLIP_PROFILE_BEGIN_KERNEL
 		kernel_subtractProgram << <num_blocks, num_threads, 0, stream >> >(
+		in_markergrid,
 		in_velgrid,
 		in_presgrid,
 		out_velgrid);
@@ -1031,6 +1256,46 @@ void picflip::advectProgram(cudaStream_t stream, uint particle_count, float3* po
 #endif
 }
 
+
+
+__global__
+void kernel_enforceBoundaries(uint particle_count, float3* positions)
+{
+	uint index = blockIdx.x*blockDim.x + threadIdx.x;
+	if (index >= particle_count)
+		return;
+
+	float3 pos = positions[index];
+	float3 cell_pos = get_cell_posf(pos);
+
+	
+	const float WALL_OFFSET = 0.01f;
+	cell_pos.x = min(max(cell_pos.x, WALL_OFFSET), dParams.grid_resolution.x - WALL_OFFSET);
+	cell_pos.y = min(max(cell_pos.y, WALL_OFFSET), dParams.grid_resolution.y - WALL_OFFSET);
+	cell_pos.z = min(max(cell_pos.z, WALL_OFFSET), dParams.grid_resolution.z - WALL_OFFSET);
+
+	cell_pos = get_wrld_posf(cell_pos);
+
+	positions[index] = cell_pos;
+}
+
+
+void picflip::enforceBoundaries(cudaStream_t stream, uint particle_count, float3* positions)
+{
+	uint num_threads;
+	uint num_blocks;
+
+	utils::compute_grid_size(particle_count, CUDA_BLOCK_SIZE, num_blocks, num_threads);
+
+	PICFLIP_PROFILE_BEGIN_KERNEL
+		kernel_enforceBoundaries << <num_blocks, num_threads, 0, stream >> >(particle_count, positions);
+	PICFLIP_PROFILE_END_KERNEL("kernel_enforceBoundaries", particle_count)
+
+#if PICFLIP_FORCE_SYNC_AFTER_EACH_KERNEL
+		gpuErrchk(cudaPeekAtLastError());
+	gpuErrchk(cudaDeviceSynchronize());
+#endif
+}
 
 template <class T>
 __global__ void Kernel_MemSetSurface(cudaSurfaceObject_t out_grid, T val, uint step, uint3 grid_size)

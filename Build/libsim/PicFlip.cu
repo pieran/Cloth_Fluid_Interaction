@@ -155,11 +155,15 @@ void FluidPicFlip::update()
 	//gpuErrchk(cudaMemset(m_GridMarker, 0, m_gridSize * sizeof(char)));
 	MemSetSurface<unsigned char>(NULL, m_GridMarkerSur, 0, m_Params.grid_resolution);
 	markProgram(NULL, m_NumParticles, m_ParticlePos, m_GridMarkerSur);
+	/*marksolidcells(
+		NULL,
+		make_uint3(55, 0, 0),
+		make_uint3(5, m_Params.grid_resolution.y, m_Params.grid_resolution.z),
+		m_GridMarkerSur);*/
 
 	//Add Force + Enforce Boundary Conditions
 	addForceProgram(NULL, m_Params.grid_resolution, vel_old->tex, vel_cur->tex);
 	std::swap(vel_cur, vel_old);
-
 
 	//Compute Divergence
 	MemSetSurface<float>(NULL, m_GridDivergenceTex, 0.0f, m_Params.grid_resolution);
@@ -169,17 +173,16 @@ void FluidPicFlip::update()
 	//gpuErrchk(cudaMemset(pres_old->arr, 0, m_gridSize * sizeof(float4)));
 	MemSetSurface<float>(NULL, pres_old->sur, 0.0f, m_Params.grid_resolution);
 	MemSetSurface<float>(NULL, pres_cur->sur, 0.0f, m_Params.grid_resolution);
-	const uint JACOBI_ITERATIONS = 500;
+	//initPressureGrid(NULL, m_Params.grid_resolution, pres_cur->sur, pres_old->sur);
 
+	const uint JACOBI_ITERATIONS = 500;
 	jacobiProgram(NULL, JACOBI_ITERATIONS, m_Params.grid_resolution, m_GridMarkerTex, m_GridDivergenceTex,
 		pres_cur->tex, pres_cur->tex, pres_old->tex, pres_old->tex);
 
 	if (JACOBI_ITERATIONS % 2 == 1) std::swap(pres_cur, pres_old);
 
-
-
 	//Subtract Pressure Gradient from grid velocities
-	subtractProgram(NULL, m_Params.grid_resolution, vel_old->tex, pres_old->tex, vel_cur->tex);
+	subtractProgram(NULL, m_Params.grid_resolution, m_GridMarkerTex, vel_old->tex, pres_old->tex, vel_cur->tex);
 	std::swap(vel_old, vel_cur);
 
 
@@ -204,6 +207,11 @@ void FluidPicFlip::update()
 #if PICFLIP_PROFILE_EACH_KERNEL
 	printf("\n\n");
 #endif
+}
+
+void FluidPicFlip::enforceBoundaries()
+{
+	picflip::enforceBoundaries(NULL, m_NumParticles, m_ParticlePos);
 }
 
 void FluidPicFlip::allocate_buffers(const std::vector<Real>& fluid_positions, const std::vector<Real>& boundary_positions)

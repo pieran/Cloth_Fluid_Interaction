@@ -23,6 +23,7 @@ public:
 	void set_ogl_vbo(uint pos, uint vel, uint dens, uint pres);
 	void copy_arrays_to_ogl_vbos();
 
+	void enforceBoundaries();
 
 protected:
 	bool BuildGridBuffers();

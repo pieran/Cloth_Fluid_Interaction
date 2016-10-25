@@ -122,9 +122,9 @@ void XPBD::InitializeCloth(int div_x, int div_y, const Matrix4& transform)
 
 		}
 	}
-	particles_initial[0].w = 0.0f;
+	//particles_initial[0].w = 0.0f;
 	//particles_initial[m_NumX - 1].w = 0.0f;
-	//particles_initial[(m_NumY -1) * m_NumX].w = 0.0f;
+	particles_initial[(m_NumY -1) * m_NumX].w = 0.0f;
 	particles_initial[m_NumY * m_NumX - 1].w = 0.0f;
 
 
@@ -408,11 +408,6 @@ void XPBD::GenerateNormals(bool reverseOrder)
 
 
 	//Bluring??
-
-
-	float4* cuda_vbo_arr;
-	uint num_bytes;
-
 }
 
 

@@ -248,8 +248,8 @@ void SceneRenderer::RenderScene()
 
 
 	//Post Process Effects
-	int ping = SCREENTEX_COLOUR1;
-	int pong = SCREENTEX_COLOUR0;
+	int ping = SCREENTEX_COLOUR0;
+	int pong = SCREENTEX_COLOUR1;
 	for (size_t i = 0; i < m_PostProcessEffects.size(); ++i)
 	{
 		if (m_PostProcessEffects[i]->OnRender(
